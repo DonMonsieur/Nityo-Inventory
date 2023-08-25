@@ -15,6 +15,8 @@ import { Fragment } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteConfirmation from "./DeleteConfirmation";
 import ViewImage from "./ViewImage";
+import ViewProduct from './ViewProduct'
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const Product = () => {
   const [products, setProducts] = useState([]);
@@ -22,6 +24,7 @@ const Product = () => {
   const [dialogType, setDialogType] = useState();
   const [selectedRow, setSelectedRow] = useState();
   const [deleteSelectedRow, setDeleteSelectedRow] = useState();
+  const [viewSelectedRow, setViewSelectedRow] = useState();
   const [selectedImage, setSelectedImage] = useState("");
 
   const fetchProducts = async () => {
@@ -135,6 +138,34 @@ const Product = () => {
     setDialogType(type);
   };
 
+  const handleViewProduct = (rowData, type) => {
+    const viewProducts = [];
+    const productId = rowData.row.id;
+    viewProducts.productId = productId;
+
+    const product_name = rowData.row.product_name;
+    viewProducts.product_name = product_name;
+
+    const unit = rowData.row.unit;
+    viewProducts.unit = unit;
+
+    const price = rowData.row.price;
+    viewProducts.price = price;
+
+    const date_of_expiry = rowData.row.date_of_expiry;
+    viewProducts.date_of_expiry = date_of_expiry;
+
+    const available_inventory = rowData.row.available_inventory;
+    viewProducts.available_inventory = available_inventory;
+
+    const image = rowData.row.image;
+    viewProducts.image = image;
+
+    setViewSelectedRow(viewProducts);
+    setOpenDialogBox(true);
+    setDialogType(type);
+  };
+
   const handleImageClick = (imageUrl, type) => {
     setSelectedImage(imageUrl);
     setOpenDialogBox(true);
@@ -234,6 +265,15 @@ const Product = () => {
       renderCell: (cellValues) => {
         return (
           <Box sx={{ margin: "auto" }}>
+            <Tooltip title="View Product">
+              <IconButton
+                color="info"
+                onClick={(e) => handleViewProduct(cellValues, "View Products")}
+              >
+                <VisibilityIcon />
+              </IconButton>
+            </Tooltip>
+
             <Tooltip title="Update Product">
               <IconButton
                 color="info"
@@ -277,12 +317,12 @@ const Product = () => {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 20,
+                pageSize: 10,
               },
             },
           }}
-          pageSizeOptions={[20]}
-          sx={{ height: "1000px" }}
+          pageSizeOptions={[10, 20, 50, 100]}
+          sx={{ height: "500px" }}
         />
       </Paper>
 
@@ -303,9 +343,11 @@ const Product = () => {
           />
         ) : dialogType === "View Image" ? (
           <ViewImage onClose={handleClose} source={selectedImage} />
+        ) : dialogType === "View Products" ? (
+          <ViewProduct onClose={handleClose} viewSelectedProduct={viewSelectedRow} />
         ) : (
           <DeleteConfirmation
-            deleteSelectedProduct={deleteSelectedRow} // Pass the selected row to your DeleteProduct component
+            deleteSelectedProduct={deleteSelectedRow}
             snackBarData={handleSnackbar}
             onClose={handleClose}
           />
