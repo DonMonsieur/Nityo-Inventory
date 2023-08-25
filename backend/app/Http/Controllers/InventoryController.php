@@ -31,11 +31,11 @@ class InventoryController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'product_name' => 'required|string|max:50|unique:inventories',
-                'unit' => 'required|string|max:10|unique:inventories',
+                'unit' => 'required|string|max:10',
                 'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
                 'date_of_expiry' => 'required|date_format:Y-m-d',
                 'available_inventory' => 'required|integer',
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'image',
             ], [
                 'product_name.required' => 'The product name field is required.',
                 'product_name.string' => 'The product name field must be a string.',
@@ -45,7 +45,6 @@ class InventoryController extends Controller
                 'unit.required' => 'The unit field is required.',
                 'unit.string' => 'The unit field must be a string.',
                 'unit.max' => 'The unit field cannot exceed 10 characters.',
-                'unit.unique' => 'The unit has already been taken.',
 
                 'price.required' => 'The price field is required.',
                 'price.numeric' => 'The price field must be a numeric value.',
@@ -56,8 +55,7 @@ class InventoryController extends Controller
                 'available_inventory.required' => 'The available inventory field is required.',
                 'available_inventory.integer' => 'The available inventory field must be an integer.',
 
-                'image.required' => 'The image field is required.',
-                'image.string' => 'The image field must be a string.',
+                'image'
             ]);
 
             if ($validator->fails()) {
@@ -76,8 +74,8 @@ class InventoryController extends Controller
                 $image = $request->file('image');
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
                 $image->storeAs('public/images/product_images', $imageName);
-                // Assuming 'product_images' is your storage folder
-                $product->image = 'storage/product_images/' . $imageName;
+                // Corrected image path without 'public' prefix
+                $product->image = 'images/product_images/' . $imageName;
             }
 
             $product->save();

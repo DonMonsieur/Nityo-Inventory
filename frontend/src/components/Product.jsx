@@ -32,7 +32,7 @@ const Product = () => {
 
     if (response.ok) {
       setProducts(response.data.products);
-      // console.log(response.data.products);
+      console.log(response.data.products);
     } else {
       console.error("Failed to fetch products.");
     }
