@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 
-const AuthLayout = () => {
+const Layout = () => {
   return (
     <Fragment>
       <Navbar />
@@ -26,4 +26,4 @@ const AuthLayout = () => {
   );
 };
 
-export default AuthLayout;
+export default Layout;

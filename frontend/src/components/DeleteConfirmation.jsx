@@ -1,17 +1,21 @@
 import {
-    Button,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    Grid,
-    TextField,
-  } from "@mui/material";
-  import React, { Fragment } from "react";
-  import { useState } from "react";
-  import api from "../api";
-  import { useEffect } from "react";
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Grid,
+  TextField,
+} from "@mui/material";
+import React, { Fragment } from "react";
+import { useState } from "react";
+import api from "../api";
+import { useEffect } from "react";
 
-const DeleteConfirmation = ({deleteSelectedProduct, snackBarData, onClose}) => {
+const DeleteConfirmation = ({
+  deleteSelectedProduct,
+  snackBarData,
+  onClose,
+}) => {
   const [productId, setProductId] = useState("");
   const [product_name, setProductName] = useState("");
   const [unit, setUnit] = useState("");
@@ -28,25 +32,11 @@ const DeleteConfirmation = ({deleteSelectedProduct, snackBarData, onClose}) => {
     setDateOfExpiry(deleteSelectedProduct.date_of_expiry);
     setAvailableInventory(deleteSelectedProduct.available_inventory);
     setImage(deleteSelectedProduct.image);
-  }, [
-    deleteSelectedProduct.productId,
-    deleteSelectedProduct.product_name,
-    deleteSelectedProduct.unit,
-    deleteSelectedProduct.price,
-    deleteSelectedProduct.date_of_expiry,
-    deleteSelectedProduct.available_inventory,
-    deleteSelectedProduct.image,
-  ]);
+  }, []);
 
   const handleDeleteProduct = async () => {
     const response = await api.delete("/api/delete/products", {
-      id: productId , 
-      product_name: product_name,
-      unit: unit,
-      price: price,
-      date_of_expiry: date_of_expiry,
-      available_inventory: available_inventory,
-      image: image,
+      id: productId,
     });
     console.log(product_name);
     if (response.ok) {
@@ -60,17 +50,16 @@ const DeleteConfirmation = ({deleteSelectedProduct, snackBarData, onClose}) => {
   return (
     <Fragment>
       <DialogContent>
-      <Grid container direction={"column"} spacing={3} mt={"1px"}>
+        <Grid container direction={"column"} spacing={3} mt={"1px"}>
           <Grid item>
             <TextField
               id="product_name"
               name="product_name"
-              label="Edit product name"
+              label="Product name"
               variant="outlined"
               size="small"
               fullWidth
               value={product_name}
-              onChange={(e) => setProductName(e.target.value)}
               disabled
             />
           </Grid>
@@ -78,12 +67,11 @@ const DeleteConfirmation = ({deleteSelectedProduct, snackBarData, onClose}) => {
             <TextField
               id="unit"
               name="unit"
-              label="Edit the unit"
+              label="Unit"
               variant="outlined"
               size="small"
               fullWidth
               value={unit}
-              onChange={(e) => setUnit(e.target.value)}
               disabled
             />
           </Grid>
@@ -91,12 +79,11 @@ const DeleteConfirmation = ({deleteSelectedProduct, snackBarData, onClose}) => {
             <TextField
               id="price"
               name="price"
-              label="Edit the price"
+              label="Price"
               variant="outlined"
               size="small"
               fullWidth
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
               disabled
             />
           </Grid>
@@ -104,12 +91,11 @@ const DeleteConfirmation = ({deleteSelectedProduct, snackBarData, onClose}) => {
             <TextField
               id="date_of_expiry"
               name="date_of_expiry"
-              label="Edit the date of expiration"
+              label="Date of expiration"
               variant="outlined"
               size="small"
               fullWidth
               value={date_of_expiry}
-              onChange={(e) => setDateOfExpiry(e.target.value)}
               disabled
             />
           </Grid>
@@ -117,12 +103,11 @@ const DeleteConfirmation = ({deleteSelectedProduct, snackBarData, onClose}) => {
             <TextField
               id="available_inventory"
               name="available_inventory"
-              label="Edit the product quantity"
+              label="Available Inventory"
               variant="outlined"
               size="small"
               fullWidth
               value={available_inventory}
-              onChange={(e) => setAvailableInventory(e.target.value)}
               disabled
             />
           </Grid>
@@ -130,12 +115,11 @@ const DeleteConfirmation = ({deleteSelectedProduct, snackBarData, onClose}) => {
             <TextField
               id="image"
               name="image"
-              label="Edit the image"
+              label="Image"
               variant="outlined"
               size="small"
               fullWidth
               value={image}
-              onChange={(e) => setImage(e.target.value)}
               disabled
             />
           </Grid>
@@ -144,19 +128,19 @@ const DeleteConfirmation = ({deleteSelectedProduct, snackBarData, onClose}) => {
         <DialogContentText id="delete-dialog-description">
           Are you sure you want to delete the selected product?
         </DialogContentText>
-      
-      <DialogActions>
-        <Button
-          color="success"
-          variant="contained"
-          sx={{
-            mr: 1,
-          }}
-          onClick={handleDeleteProduct}
-        >
-          Yes, Delete!
-        </Button>
-      </DialogActions>
+
+        <DialogActions>
+          <Button
+            color="success"
+            variant="contained"
+            sx={{
+              mr: 1,
+            }}
+            onClick={handleDeleteProduct}
+          >
+            Yes, Delete!
+          </Button>
+        </DialogActions>
       </DialogContent>
     </Fragment>
   );

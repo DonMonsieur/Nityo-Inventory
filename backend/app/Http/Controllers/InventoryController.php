@@ -158,18 +158,22 @@ class InventoryController extends Controller
     public function deleteProduct(Request $request)
     {
         try {
+            $this->validate($request, [
+                'id' => 'required|integer',
+            ]);
+
             $product = Inventory::find($request->id);
 
-            $product->product_name = $request->input('product_name');
-            $product->unit = $request->input('unit');
-            $product->price = $request->input('price');
-            $product->date_of_expiry = $request->input('date_of_expiry');
-            $product->available_inventory = $request->input('available_inventory');
-            $product->image = $request->input('image');
+            if (!$product) {
+                return response()->json([
+                    'error' => 'Product not found'
+                ], 404);
+            }
+
             $product->delete();
 
             return response()->json([
-                'message' => 'Products deleted successfully'
+                'message' => 'Product deleted successfully'
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
