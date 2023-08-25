@@ -97,7 +97,7 @@ class InventoryController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'product_name' => 'required|string|max:50|regex:/^[a-zA-Z0-9 ]+$/|unique:inventories,product_name,' . $request->id,
-                'unit' => 'required|string|max:10|regex:/^[a-zA-Z0-9 ]+$/|unique:inventories,unit,' . $request->id,
+                'unit' => 'required|string|max:10|regex:/^[a-zA-Z0-9 ]+$/',
                 'price' => 'required|numeric',
                 'date_of_expiry' => 'required|',
                 'available_inventory' => 'required|integer',
