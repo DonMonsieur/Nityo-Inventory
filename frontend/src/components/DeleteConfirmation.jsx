@@ -38,7 +38,7 @@ const DeleteConfirmation = ({
     const response = await api.delete("/api/delete/products", {
       id: productId,
     });
-    console.log(product_name);
+    // console.log(productId);
     if (response.ok) {
       snackBarData(true, "success", response.data.message);
       onClose();
