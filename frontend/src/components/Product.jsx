@@ -15,8 +15,8 @@ import { Fragment } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteConfirmation from "./DeleteConfirmation";
 import ViewImage from "./ViewImage";
-import ViewProduct from './ViewProduct'
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import ViewProduct from "./ViewProduct";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const Product = () => {
   const [products, setProducts] = useState([]);
@@ -178,7 +178,7 @@ const Product = () => {
       headerName: "Image",
       headerClassName: "headercolor",
       renderCell: (cellValues) => {
-        // CELL RENDERER FOR IMAGE
+        // console.log(cellValues.row.image);
         return (
           <CardMedia
             component="img"
@@ -344,7 +344,10 @@ const Product = () => {
         ) : dialogType === "View Image" ? (
           <ViewImage onClose={handleClose} source={selectedImage} />
         ) : dialogType === "View Products" ? (
-          <ViewProduct onClose={handleClose} viewSelectedProduct={viewSelectedRow} />
+          <ViewProduct
+            onClose={handleClose}
+            viewSelectedProduct={viewSelectedRow}
+          />
         ) : (
           <DeleteConfirmation
             deleteSelectedProduct={deleteSelectedRow}

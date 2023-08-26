@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class InventoryController extends Controller
@@ -73,12 +74,17 @@ class InventoryController extends Controller
             $product->available_inventory = $request->input('available_inventory');
 
             if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->storeAs('public/images/product_images', $imageName);
-                // Corrected image path without 'public' prefix
-                $product->image = 'images/product_images/' . $imageName;
+                $imageFile = $request->file('image');
+                $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
+                $imagePath = 'images/product_images/' . $imageName;
+            
+                // Store the image using the storage facade
+                Storage::put($imagePath, file_get_contents($imageFile));
+            
+                // Save the image path to the database
+                $product->image = $imagePath;
             }
+            
 
             $product->save();
 
