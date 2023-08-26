@@ -10,21 +10,23 @@ class InventoryController extends Controller
 {
 
     public function getProduct()
-    {
-        try {
-            $products = Inventory::all();
+{
+    try {
+        $products = Inventory::orderByRaw('GREATEST(created_at, updated_at) DESC')
+            ->get();
 
-            // dd($products);
-
-            return response()->json([
-                'products' => $products,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Something went wrong'
-            ], 500);
-        }
+        return response()->json([
+            'products' => $products,
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Something went wrong'
+        ], 500);
     }
+}
+
+
+
 
     public function createProduct(Request $request)
     {
