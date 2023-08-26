@@ -26,9 +26,6 @@ class InventoryController extends Controller
     }
 }
 
-
-
-
     public function createProduct(Request $request)
     {
         try {
@@ -66,25 +63,14 @@ class InventoryController extends Controller
             }
 
             $product = new Inventory();
+            $imagePath = $request->file('image')->store('images', 'public'); // add me
 
             $product->product_name = $request->input('product_name');
             $product->unit = $request->input('unit');
             $product->price = $request->input('price');
             $product->date_of_expiry = $request->input('date_of_expiry');
+            $product->image = $imagePath; //add me
             $product->available_inventory = $request->input('available_inventory');
-
-            if ($request->hasFile('image')) {
-                $imageFile = $request->file('image');
-                $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
-                $imagePath = 'images/product_images/' . $imageName;
-            
-                // Store the image using the storage facade
-                Storage::put($imagePath, file_get_contents($imageFile));
-            
-                // Save the image path to the database
-                $product->image = $imagePath;
-            }
-            
 
             $product->save();
 
