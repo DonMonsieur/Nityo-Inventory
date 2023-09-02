@@ -84,7 +84,7 @@ class InventoryController extends Controller
         }
     }
 
-    public function updateProduct(Request $request)
+    public function updateProduct(Request $request, $id)
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -93,7 +93,7 @@ class InventoryController extends Controller
                 'price' => 'required|numeric',
                 'date_of_expiry' => 'required|',
                 'available_inventory' => 'required|integer',
-                'image' => 'required|string',
+                'image',
             ], [
                 'product_name.required' => 'The product name field is required.',
                 'product_name.string' => 'The product name field must be a string.',
@@ -116,8 +116,7 @@ class InventoryController extends Controller
                 'available_inventory.required' => 'The available inventory field is required.',
                 'available_inventory.integer' => 'The available inventory field must be an integer.',
 
-                'image.required' => 'The image field is required.',
-                'image.string' => 'The image field must be a string.',
+                'image',
             ]);
 
             if ($validator->fails()) {
@@ -126,14 +125,20 @@ class InventoryController extends Controller
                 ], 400);
             }
 
-            $product = Inventory::find($request->id);
+            $product = Inventory::find($id);
+            if (!$product) {
+                return response()->json([
+                    'error' => 'Product not found'
+                ], 404);
+            }
 
+            $imagePath = $request->file('image')->store('images', 'public');
             $product->product_name = $request->input('product_name');
             $product->unit = $request->input('unit');
             $product->price = $request->input('price');
             $product->date_of_expiry = $request->input('date_of_expiry');
             $product->available_inventory = $request->input('available_inventory');
-            $product->image = $request->input('image');
+            $product->image = $imagePath;
 
             $product->save();
 

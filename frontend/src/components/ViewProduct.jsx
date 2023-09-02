@@ -1,8 +1,5 @@
 import {
-  Button,
-  DialogActions,
   DialogContent,
-  DialogContentText,
   Grid,
   TextField,
 } from "@mui/material";
@@ -16,7 +13,6 @@ const DeleteConfirmation = ({ viewSelectedProduct }) => {
   const [price, setPrice] = useState("");
   const [date_of_expiry, setDateOfExpiry] = useState("");
   const [available_inventory, setAvailableInventory] = useState("");
-  const [image, setImage] = useState("");
 
   useEffect(() => {
     setProductName(viewSelectedProduct.product_name);
@@ -24,7 +20,6 @@ const DeleteConfirmation = ({ viewSelectedProduct }) => {
     setPrice(viewSelectedProduct.price);
     setDateOfExpiry(viewSelectedProduct.date_of_expiry);
     setAvailableInventory(viewSelectedProduct.available_inventory);
-    setImage(viewSelectedProduct.image);
   }, [viewSelectedProduct]);
 
   return (
@@ -96,20 +91,6 @@ const DeleteConfirmation = ({ viewSelectedProduct }) => {
               size="small"
               fullWidth
               value={available_inventory}
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              id="image"
-              name="image"
-              label="Image"
-              variant="outlined"
-              size="small"
-              fullWidth
-              value={image}
               InputProps={{
                 readOnly: true,
               }}
