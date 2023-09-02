@@ -14,7 +14,7 @@ export default function ButtonAppBar() {
                         component="div"
                         sx={{ flexGrow: 1, textAlign: "center" }}
                     >
-                        Nityo Inventory
+                        Nityo Inventory TestTestTestTest
                     </Typography>
                 </Toolbar>
             </AppBar>
