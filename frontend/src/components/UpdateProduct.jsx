@@ -32,7 +32,6 @@ const UpdateProduct = ({ selectedProduct, snackBarData, onClose }) => {
     setAvailableInventory(selectedProduct.available_inventory);
     setImage(selectedProduct.image);
   }, [
-    selectedProduct.productId,
     selectedProduct.product_name,
     selectedProduct.unit,
     selectedProduct.price,
@@ -41,32 +40,29 @@ const UpdateProduct = ({ selectedProduct, snackBarData, onClose }) => {
     selectedProduct.image,
   ]);
 
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
+  };
+
   const handleConfirmation = () => {
     setConfirmationButton(true);
   };
 
-  const handleImageChange = (e) => {
-    const selectedImage = e.target.files[0];
-    setImage(URL.createObjectURL(selectedImage));
-  };
-
   const handleUpdateProduct = async () => {
     const formData = new FormData();
-    formData.append("id", productId);
+    formData.append("image", image);
     formData.append("product_name", product_name);
     formData.append("unit", unit);
     formData.append("price", price);
     formData.append("date_of_expiry", date_of_expiry);
     formData.append("available_inventory", available_inventory);
-    if (image) {
-      formData.append("image", image);
-    }
 
     const response = await api.put(
-      "/api/update/products/${productId}",
+      `/api/update/products/${productId}`,
       formData
     );
-    console.log(product_name);
+
     if (response.ok) {
       snackBarData(true, "success", response.data.message);
       onClose();
@@ -80,6 +76,10 @@ const UpdateProduct = ({ selectedProduct, snackBarData, onClose }) => {
     <Fragment>
       <DialogContent>
         <Grid container direction={"column"} spacing={3} mt={"1px"}>
+          <Grid item>
+            <Button>Product ID: {productId}</Button>
+          </Grid>
+
           <Grid item>
             <Input
               type="file"
@@ -150,7 +150,6 @@ const UpdateProduct = ({ selectedProduct, snackBarData, onClose }) => {
               onChange={(e) => setAvailableInventory(e.target.value)}
             />
           </Grid>
-
           <Grid item></Grid>
         </Grid>
         <DialogActions>

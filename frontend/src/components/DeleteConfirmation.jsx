@@ -22,7 +22,6 @@ const DeleteConfirmation = ({
   const [price, setPrice] = useState("");
   const [date_of_expiry, setDateOfExpiry] = useState("");
   const [available_inventory, setAvailableInventory] = useState("");
-  const [image, setImage] = useState("");
 
   useEffect(() => {
     setProductId(deleteSelectedProduct.productId);
@@ -31,7 +30,6 @@ const DeleteConfirmation = ({
     setPrice(deleteSelectedProduct.price);
     setDateOfExpiry(deleteSelectedProduct.date_of_expiry);
     setAvailableInventory(deleteSelectedProduct.available_inventory);
-    setImage(deleteSelectedProduct.image);
   }, []);
 
   const handleDeleteProduct = async () => {
@@ -60,7 +58,7 @@ const DeleteConfirmation = ({
               size="small"
               fullWidth
               value={product_name}
-              disabled
+              inputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item>
@@ -72,7 +70,7 @@ const DeleteConfirmation = ({
               size="small"
               fullWidth
               value={unit}
-              disabled
+              inputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item>
@@ -84,7 +82,7 @@ const DeleteConfirmation = ({
               size="small"
               fullWidth
               value={price}
-              disabled
+              inputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item>
@@ -96,7 +94,7 @@ const DeleteConfirmation = ({
               size="small"
               fullWidth
               value={date_of_expiry}
-              disabled
+              inputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item>
@@ -108,30 +106,18 @@ const DeleteConfirmation = ({
               size="small"
               fullWidth
               value={available_inventory}
-              disabled
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              id="image"
-              name="image"
-              label="Image"
-              variant="outlined"
-              size="small"
-              fullWidth
-              value={image}
-              disabled
+              inputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item></Grid>
         </Grid>
-        <DialogContentText id="delete-dialog-description">
-          Are you sure you want to delete the selected product?
-        </DialogContentText>
 
         <DialogActions>
+          <DialogContentText id="delete" sx={{ mr: "10px", color: "red" }}>
+            Are you sure you want to delete the selected product?
+          </DialogContentText>
           <Button
-            color="success"
+            color="error"
             variant="contained"
             sx={{
               mr: 1,

@@ -11,20 +11,20 @@ class InventoryController extends Controller
 {
 
     public function getProduct()
-{
-    try {
-        $products = Inventory::orderByRaw('GREATEST(created_at, updated_at) DESC')
-            ->get();
+    {
+        try {
+            $products = Inventory::orderByRaw('GREATEST(created_at, updated_at) DESC')
+                ->get();
 
-        return response()->json([
-            'products' => $products,
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => 'Something went wrong'
-        ], 500);
+            return response()->json([
+                'products' => $products,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Something went wrong'
+            ], 500);
+        }
     }
-}
 
     public function createProduct(Request $request)
     {
@@ -63,13 +63,13 @@ class InventoryController extends Controller
             }
 
             $product = new Inventory();
-            $imagePath = $request->file('image')->store('images', 'public'); // add me
+            $imagePath = $request->file('image')->store('images', 'public');
 
             $product->product_name = $request->input('product_name');
             $product->unit = $request->input('unit');
             $product->price = $request->input('price');
             $product->date_of_expiry = $request->input('date_of_expiry');
-            $product->image = $imagePath; //add me
+            $product->image = $imagePath;
             $product->available_inventory = $request->input('available_inventory');
 
             $product->save();
@@ -88,11 +88,11 @@ class InventoryController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'product_name' => 'required|string|max:50|regex:/^[a-zA-Z0-9 ]+$/|unique:inventories,product_name,' . $request->id,
-                'unit' => 'required|string|max:10|regex:/^[a-zA-Z0-9 ]+$/',
-                'price' => 'required|numeric',
-                'date_of_expiry' => 'required|',
-                'available_inventory' => 'required|integer',
+                'product_name' => 'string|max:50|regex:/^[a-zA-Z0-9 ]+$/|unique:inventories,product_name,' . $request->id,
+                'unit' => 'string|max:10|regex:/^[a-zA-Z0-9 ]+$/',
+                'price' => 'numeric',
+                'date_of_expiry' => 'date_format:Y-m-d',
+                'available_inventory' => 'integer',
                 'image',
             ], [
                 'product_name.required' => 'The product name field is required.',
@@ -126,11 +126,6 @@ class InventoryController extends Controller
             }
 
             $product = Inventory::find($id);
-            if (!$product) {
-                return response()->json([
-                    'error' => 'Product not found'
-                ], 404);
-            }
 
             $imagePath = $request->file('image')->store('images', 'public');
             $product->product_name = $request->input('product_name');
@@ -138,6 +133,8 @@ class InventoryController extends Controller
             $product->price = $request->input('price');
             $product->date_of_expiry = $request->input('date_of_expiry');
             $product->available_inventory = $request->input('available_inventory');
+            $imagePath = $request->file('image')->storeAs('images', 'product_' . time() . '.' . $request->file('image')->getClientOriginalExtension(), 'public');
+
             $product->image = $imagePath;
 
             $product->save();

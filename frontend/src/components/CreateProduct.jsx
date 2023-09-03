@@ -26,7 +26,6 @@ const CreateProduct = ({ snackBarData, onClose }) => {
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
-    console.log(selectedImage); // Check if the selected image is logged correctly
     setImage(selectedImage);
   };
   
@@ -42,7 +41,6 @@ const CreateProduct = ({ snackBarData, onClose }) => {
 
     const response = await api.post("/api/create/products", formData);
 
-    console.log(response);
     if (response.ok) {
       snackBarData(true, "success", response.data.message);
       onClose();
