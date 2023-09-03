@@ -3,6 +3,7 @@ import {
   DialogActions,
   DialogContent,
   Grid,
+  Input,
   TextField,
 } from "@mui/material";
 import React, { Fragment } from "react";
@@ -18,7 +19,7 @@ const UpdateProduct = ({ selectedProduct, snackBarData, onClose }) => {
   const [price, setPrice] = useState("");
   const [date_of_expiry, setDateOfExpiry] = useState("");
   const [available_inventory, setAvailableInventory] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [confirmationButton, setConfirmationButton] = useState(false);
 
   useEffect(() => {
@@ -30,7 +31,6 @@ const UpdateProduct = ({ selectedProduct, snackBarData, onClose }) => {
     setAvailableInventory(selectedProduct.available_inventory);
     setImage(selectedProduct.image);
   }, [
-    selectedProduct.productId,
     selectedProduct.product_name,
     selectedProduct.unit,
     selectedProduct.price,
@@ -39,25 +39,33 @@ const UpdateProduct = ({ selectedProduct, snackBarData, onClose }) => {
     selectedProduct.image,
   ]);
 
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
+  };
+
   const handleConfirmation = () => {
     setConfirmationButton(true);
   };
 
   const handleUpdateProduct = async () => {
-    const response = await api.put("/api/update/products", {
-      id: productId,
-      product_name: product_name,
-      unit: unit,
-      price: price,
-      date_of_expiry: date_of_expiry,
-      available_inventory: available_inventory,
-      image: image,
-    });
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("product_name", product_name);
+    formData.append("unit", unit);
+    formData.append("price", price);
+    formData.append("date_of_expiry", date_of_expiry);
+    formData.append("available_inventory", available_inventory);
+
+    const response = await api.put(
+      `/api/update/products/${productId}`,
+      formData
+    );
+
     if (response.ok) {
       snackBarData(true, "success", response.data.message);
       onClose();
     } else {
-      // console.log(response.data.error);
       setConfirmationButton(false);
       snackBarData(true, "error", response.data.error);
     }
@@ -67,6 +75,19 @@ const UpdateProduct = ({ selectedProduct, snackBarData, onClose }) => {
     <Fragment>
       <DialogContent>
         <Grid container direction={"column"} spacing={3} mt={"1px"}>
+          <Grid item>
+            <Button>Product ID: {productId}</Button>
+          </Grid>
+
+          <Grid item>
+            <Input
+              type="file"
+              id="image"
+              name="image"
+              fullWidth
+              onChange={handleImageChange}
+            />
+          </Grid>
           <Grid item>
             <TextField
               id="product_name"
@@ -126,18 +147,6 @@ const UpdateProduct = ({ selectedProduct, snackBarData, onClose }) => {
               fullWidth
               value={available_inventory}
               onChange={(e) => setAvailableInventory(e.target.value)}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              id="image"
-              name="image"
-              label="Edit the image"
-              variant="outlined"
-              size="small"
-              fullWidth
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
             />
           </Grid>
           <Grid item></Grid>

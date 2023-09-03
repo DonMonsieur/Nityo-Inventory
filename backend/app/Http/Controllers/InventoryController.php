@@ -11,20 +11,20 @@ class InventoryController extends Controller
 {
 
     public function getProduct()
-{
-    try {
-        $products = Inventory::orderByRaw('GREATEST(created_at, updated_at) DESC')
-            ->get();
+    {
+        try {
+            $products = Inventory::orderByRaw('GREATEST(created_at, updated_at) DESC')
+                ->get();
 
-        return response()->json([
-            'products' => $products,
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => 'Something went wrong'
-        ], 500);
+            return response()->json([
+                'products' => $products,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Something went wrong'
+            ], 500);
+        }
     }
-}
 
     public function createProduct(Request $request)
     {
@@ -63,13 +63,13 @@ class InventoryController extends Controller
             }
 
             $product = new Inventory();
-            $imagePath = $request->file('image')->store('images', 'public'); // add me
+            $imagePath = $request->file('image')->store('images', 'public');
 
             $product->product_name = $request->input('product_name');
             $product->unit = $request->input('unit');
             $product->price = $request->input('price');
             $product->date_of_expiry = $request->input('date_of_expiry');
-            $product->image = $imagePath; //add me
+            $product->image = $imagePath;
             $product->available_inventory = $request->input('available_inventory');
 
             $product->save();
@@ -84,16 +84,16 @@ class InventoryController extends Controller
         }
     }
 
-    public function updateProduct(Request $request)
+    public function updateProduct(Request $request, $id)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'product_name' => 'required|string|max:50|regex:/^[a-zA-Z0-9 ]+$/|unique:inventories,product_name,' . $request->id,
-                'unit' => 'required|string|max:10|regex:/^[a-zA-Z0-9 ]+$/',
-                'price' => 'required|numeric',
-                'date_of_expiry' => 'required|',
-                'available_inventory' => 'required|integer',
-                'image' => 'required|string',
+                'product_name' => 'string|max:50|regex:/^[a-zA-Z0-9 ]+$/|unique:inventories,product_name,' . $request->id,
+                'unit' => 'string|max:10|regex:/^[a-zA-Z0-9 ]+$/',
+                'price' => 'numeric',
+                'date_of_expiry' => 'date_format:Y-m-d',
+                'available_inventory' => 'integer',
+                'image',
             ], [
                 'product_name.required' => 'The product name field is required.',
                 'product_name.string' => 'The product name field must be a string.',
@@ -116,8 +116,7 @@ class InventoryController extends Controller
                 'available_inventory.required' => 'The available inventory field is required.',
                 'available_inventory.integer' => 'The available inventory field must be an integer.',
 
-                'image.required' => 'The image field is required.',
-                'image.string' => 'The image field must be a string.',
+                'image',
             ]);
 
             if ($validator->fails()) {
@@ -126,14 +125,16 @@ class InventoryController extends Controller
                 ], 400);
             }
 
-            $product = Inventory::find($request->id);
+            $product = Inventory::find($id);
 
             $product->product_name = $request->input('product_name');
             $product->unit = $request->input('unit');
             $product->price = $request->input('price');
             $product->date_of_expiry = $request->input('date_of_expiry');
             $product->available_inventory = $request->input('available_inventory');
-            $product->image = $request->input('image');
+            $imagePath = $request->file('image')->storeAs('images', 'product_' . time() . '.' . $request->file('image')->getClientOriginalExtension(), 'public');
+
+            $product->image = $imagePath;
 
             $product->save();
 

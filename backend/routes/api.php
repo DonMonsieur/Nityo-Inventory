@@ -21,6 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/products', [InventoryController::class, 'getProduct']);
 Route::post('/create/products', [InventoryController::class, 'createProduct']);
-Route::put('/update/products', [InventoryController::class, 'updateProduct']);
+Route::put('/api/update/products/{id}', [InventoryController::class, 'updateProduct']);
 Route::delete('/delete/products', [InventoryController::class, 'deleteProduct']);
 
